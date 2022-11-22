@@ -1,0 +1,70 @@
+#########################################################################
+# Title:            Community: Readarr                                  #
+# Author(s):        halfdeadgames                                       #
+# URL:              https://github.com/Cloudbox/Community               #
+# Docker Image(s):  netdata/netdata                                     #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare-dns
+  vars:
+    record: netdata
+  when: cloudflare_enabled
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: netdata
+    state: absent
+
+- name: Create netdata directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - /opt/netdata
+
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/opt/netdata/config:/etc/netdata"
+      - "/opt/netdata/lib:/var/lib/netdata"
+      - "/opt/netdata/cache:/var/cache/netdata"
+      - "/etc/passwd:/host/etc/passwd:ro"
+      - "/etc/group:/host/etc/group:ro"
+      - "/proc:/host/proc:ro"
+      - "/sys:/host/sys:ro"
+      - "/etc/os-release:/host/etc/os-release:ro"
+
+- name: Create and start container
+  docker_container:
+    name: netdata
+    image: netdata/netdata
+    pull: yes
+    exposed_ports:
+      - "19999"
+    capabilities:
+      - SYS_PTRACE
+    security_opts:
+      - apparmor:unconfined
+    env:
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      UMASK: "002"
+      VIRTUAL_HOST: "netdata.{{ user.domain }}"
+      VIRTUAL_PORT: "19999"
+      LETSENCRYPT_HOST: "netdata.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+      TZ: "{{ tz }}"
+    volumes: "{{ default_volumes }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - netdata
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
