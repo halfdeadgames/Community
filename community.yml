@@ -86,6 +86,7 @@
     - { role: mylar, tags: ['mylar'] }
     - { role: mylar3, tags: ['mylar3'] }
     - { role: navidrome, tags: ['navidrome'] }
+    - { role: netdata, tags: ['netdata'] }
     - { role: nextcloud, tags: ['nextcloud'] }
     - { role: nowshowing, tags: ['nowshowing'] }
     - { role: nzbhydra, tags: ['nzbhydra'] }
