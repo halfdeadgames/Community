@@ -88,6 +88,7 @@
     - { role: navidrome, tags: ['navidrome'] }
     - { role: netdata, tags: ['netdata'] }
     - { role: nextcloud, tags: ['nextcloud'] }
+    - { role: nomachine, tags: ['nomachine'] }
     - { role: nowshowing, tags: ['nowshowing'] }
     - { role: nzbhydra, tags: ['nzbhydra'] }
     - { role: ombix, tags: ['ombix'] }
