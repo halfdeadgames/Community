@@ -41,7 +41,7 @@
 - name: Create and start container
   docker_container:
     name: calibre
-    image: lscr.io/linuxserver/calibre
+    image: lscr.io/linuxserver/calibre:latest
     pull: yes
     security_opts:
       - seccomp:unconfined
@@ -54,10 +54,11 @@
       VIRTUAL_PORT: "8080"
       LETSENCRYPT_HOST: "calibre.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      CALIBRE_OVERRIDE_DATABASE_PATH: "/config/metadata.db"
+      UMASK_SET: "000"
     volumes:
       - "/opt/calibre:/config"
       - "/mnt/unionfs/Media/Books:/books"
-      - "/mnt:/mnt"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
