@@ -39,7 +39,7 @@
       VIRTUAL_PORT: "9999"
       LETSENCRYPT_HOST: "stash.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
-      STASH_STASH: "/adult/"
+      STASH_STASH: "/data/"
       STASH_GENERATED: "/generated/"
       STASH_METADATA: "/metadata/"
       STASH_CACHE: "/cache/"
