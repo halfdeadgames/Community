@@ -32,7 +32,7 @@
       - "/opt/whisparr:/config"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
-      - "/mnt/unionfs/Media/adult:/adult"
+      - "/mnt/unionfs/Media/Adult:/adult"
 
 - name: Create and start container
   docker_container:
