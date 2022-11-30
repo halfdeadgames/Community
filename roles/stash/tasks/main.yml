@@ -49,6 +49,7 @@
       - "/opt/stash/metadata:/metadata"
       - "/opt/stash/cache:/cache"
       - "/opt/stash/generated:/generated"
+      - "/opt/stash/generated/transcodes:/mnt/unionfs/Media/AdultTranscodes"
       - "/mnt:/mnt"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"

@@ -31,6 +31,7 @@
     - { role: calibre, tags: ['calibre'] }
     - { role: calibre-web, tags: ['calibre-web'] }
     - { role: changedetection, tags: ['changedetection'] }
+    - { role: chromedp, tags: ['chromedp'] }
     - { role: coder, tags: ['coder'] }
     - { role: comixed, tags: ['comixed'] }
     - { role: comicstreamer, tags: ['comicstreamer'] }
