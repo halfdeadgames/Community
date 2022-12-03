@@ -86,6 +86,7 @@
     - { role: moviematch, tags: ['moviematch'] }
     - { role: mylar, tags: ['mylar'] }
     - { role: mylar3, tags: ['mylar3'] }
+    - { role: namer, tags: ['namer'] }
     - { role: navidrome, tags: ['navidrome'] }
     - { role: netdata, tags: ['netdata'] }
     - { role: nextcloud, tags: ['nextcloud'] }
@@ -107,6 +108,7 @@
     - { role: pyload, tags: ['pyload'] }
     - { role: qbittorrent, tags: ['qbittorrent'] }
     - { role: qbittorrentvpn, tags: ['qbittorrentvpn'] }
+    - { role: qbittorrentvpnx, tags: ['qbittorrentvpnx'] }
     - { role: quassel, tags: ['quassel'] }
     - { role: radarrx, tags: ['radarrx'] }
     - { role: readarr, tags: ['readarr'] }
