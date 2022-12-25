@@ -19,7 +19,7 @@
   vars:
     record: "qbittorrentvpn{{ rolename }}"
   when: cloudflare_enabled
-
+  
 - name: Create qbittorrentvpn directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:

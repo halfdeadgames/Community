@@ -69,6 +69,7 @@
     - { role: influxdb, tags: ['influxdb'] }
     - { role: invoiceninja, tags: ['invoiceninja'] }
     - { role: jellyfin, tags: ['jellyfin'] }
+    - { role: jellyfin_autoscan, tags: ['jellyfin_autoscan'] }
     - { role: jfa-go, tags: ['jfa-go', 'jellyfinaccounts', 'jellyfinaccountsgo'] }
     - { role: jirafeau, tags: ['jirafeau'] }
     - { role: kcptun-client, tags: ['kcptun-client'] }
