@@ -1,0 +1,34 @@
+###################################################################
+# Title:            Community: ChromeDP                           #
+# Author(s):        -SK                                           #
+# URL:              https://github.com/Cloudbox/Community         #
+# Docker Image(s):  chromedp/headless-shell                       #
+# --                                                              #
+#         Part of the Cloudbox project: https://cloudbox.works    #
+###################################################################
+#                 GNU General Public License v3.0                 #
+###################################################################
+---
+  
+- name: Stop and remove any existing container
+  docker_container:
+    name: chromedp
+    state: absent
+
+- name: Create and start container
+  docker_container:
+    name: chromedp
+    image: chromedp/headless-shell
+    pull: yes
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    published_ports:
+      - "127.0.0.1:9222:9222"
+    networks:
+      - name: cloudbox
+        aliases:
+          - chromedp
+    purge_networks: yes
+    shm_size: "2g"
+    restart_policy: unless-stopped
+    state: started

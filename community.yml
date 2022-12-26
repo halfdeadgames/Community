@@ -31,6 +31,7 @@
     - { role: calibre, tags: ['calibre'] }
     - { role: calibre-web, tags: ['calibre-web'] }
     - { role: changedetection, tags: ['changedetection'] }
+    - { role: chromedp, tags: ['chromedp'] }
     - { role: coder, tags: ['coder'] }
     - { role: comixed, tags: ['comixed'] }
     - { role: comicstreamer, tags: ['comicstreamer'] }
@@ -68,6 +69,7 @@
     - { role: influxdb, tags: ['influxdb'] }
     - { role: invoiceninja, tags: ['invoiceninja'] }
     - { role: jellyfin, tags: ['jellyfin'] }
+    - { role: jellyfin_autoscan, tags: ['jellyfin_autoscan'] }
     - { role: jfa-go, tags: ['jfa-go', 'jellyfinaccounts', 'jellyfinaccountsgo'] }
     - { role: jirafeau, tags: ['jirafeau'] }
     - { role: kcptun-client, tags: ['kcptun-client'] }
@@ -77,6 +79,7 @@
     - { role: lazylibrarian, tags: ['lazylibrarian'] }
     - { role: lidarrx, tags: ['lidarrx'] }
     - { role: logarr, tags: ['logarr'] }
+    - { role: mariadb, tags: ['mariadb'] }
     - { role: mediabutler, tags: ['mediabutler'] }
     - { role: medusa, tags: ['medusa'] }
     - { role: minecraft, tags: ['minecraft'] }
@@ -85,6 +88,7 @@
     - { role: moviematch, tags: ['moviematch'] }
     - { role: mylar, tags: ['mylar'] }
     - { role: mylar3, tags: ['mylar3'] }
+    - { role: namer, tags: ['namer'] }
     - { role: navidrome, tags: ['navidrome'] }
     - { role: netdata, tags: ['netdata'] }
     - { role: nextcloud, tags: ['nextcloud'] }
@@ -106,6 +110,7 @@
     - { role: pyload, tags: ['pyload'] }
     - { role: qbittorrent, tags: ['qbittorrent'] }
     - { role: qbittorrentvpn, tags: ['qbittorrentvpn'] }
+    - { role: qbittorrentvpnx, tags: ['qbittorrentvpnx'] }
     - { role: quassel, tags: ['quassel'] }
     - { role: radarrx, tags: ['radarrx'] }
     - { role: readarr, tags: ['readarr'] }
