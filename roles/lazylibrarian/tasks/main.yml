@@ -25,11 +25,15 @@
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/lazylibrarian
+    - /mnt/unionfs/Media/Books
+    - /mnt/unionfs/Media/Audiobooks
+    - /mnt/unionfs/Media/Magazines
+    - /mnt/unionfs/Media/Comics
 
 - name: Create and start container
   docker_container:
     name: lazylibrarian
-    image: thraxis/lazylibrarian-calibre
+    image: linuxserver/lazylibrarian
     pull: yes
     env:
       TZ: "{{ tz }}"
@@ -39,8 +43,15 @@
       VIRTUAL_PORT: "5299"
       LETSENCRYPT_HOST: "lazylibrarian.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      DOCKER_MODS: "linuxserver/calibre-web:calibre"
     volumes:
       - "/opt/lazylibrarian:/config"
+      - "/mnt/unionfs/Media/Books:/books"
+      - "/mnt/unionfs/Media/Audiobooks:/audiobooks"
+      - "/mnt/unionfs/Media/Magazines:/magazines"
+      - "/mnt/unionfs/Media/Comics:/comics"
+      - "/mnt/local/downloads/:/downloads"
+      - "/opt/calibre:/calibre"
       - "/mnt:/mnt"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"

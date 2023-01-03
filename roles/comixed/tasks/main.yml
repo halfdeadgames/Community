@@ -25,7 +25,10 @@
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/comixed
+    - /opt/comixed/root
+    - /opt/comixed/comic_data
     - /mnt/local/Media/Comics
+    
 - name: Create and start container
   docker_container:
     name: comixed
@@ -40,10 +43,10 @@
       LETSENCRYPT_HOST: "comixed.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
-      - "/opt/comixed:/root/.comixed"
-      - "/mnt/unionfs/Media/Comics:/comics"
-      - "mnt:/mnt"
-
+      - "/opt/comixed/root:/root/.comixed"
+      - "/mnt/unionfs/Media/Comics:/library/incoming"
+      - "/mnt/unionfs/Media/Comics:/comic_data"
+      - "/mnt:/mnt"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:

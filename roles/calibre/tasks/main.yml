@@ -37,24 +37,30 @@
   with_items:
    - /opt/calibre
    - /mnt/local/Media/Books
+   - /mnt/local/calibreimport
 
 - name: Create and start container
   docker_container:
     name: calibre
     image: lscr.io/linuxserver/calibre
     pull: yes
+    security_opts:
+      - seccomp:unconfined
     env:
       TZ: "{{ tz }}"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      LIBRARYINTERNALPATH: "/library"
       VIRTUAL_HOST: "calibre.{{ user.domain }}"
       VIRTUAL_PORT: "8080"
       LETSENCRYPT_HOST: "calibre.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      CALIBRE_OVERRIDE_DATABASE_PATH: "/books/metadata.db"
+      HOME: "/books"
+      CALIBRE_CONFIG_DIRECTORY: "/config"
     volumes:
+      - "/mnt/unionfs/Media/Books:/books"
       - "/opt/calibre:/config"
-      - "/mnt/unionfs/Media/Books:/library"
+      - "/mnt/local/calibreimport:/import"
       - "/mnt:/mnt"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"

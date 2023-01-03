@@ -24,7 +24,11 @@
   set_fact:
     default_volumes:
       - "/opt/jellyfin_autoscan:/config"
+      - "/opt/plex:/opt/plex"
       - "/etc/localtime:/etc/localtime:ro"
+      - "/mnt:/mnt"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Databases:/plexDb"
 
 - name: Create and start container
   docker_container:
