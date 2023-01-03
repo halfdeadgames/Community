@@ -36,6 +36,7 @@
     - { role: comixed, tags: ['comixed'] }
     - { role: comicstreamer, tags: ['comicstreamer'] }
     - { role: conreq, tags: ['conreq'] }
+    - { role: dailynotes, tags: ['dailynotes'] }
     - { role: dashmachine, tags: ['dashmachine'] }
     - { role: deemix, tags: ['deemix'] }
     - { role: deemixrr, tags: ['deemixrr'] }
@@ -82,6 +83,7 @@
     - { role: mariadb, tags: ['mariadb'] }
     - { role: mediabutler, tags: ['mediabutler'] }
     - { role: medusa, tags: ['medusa'] }
+    - { role: metube, tags: ['metube'] }
     - { role: minecraft, tags: ['minecraft'] }
     - { role: mkvtoolnix, tags: ['mkvtoolnix'] }
     - { role: monitorr, tags: ['monitorr'] }
