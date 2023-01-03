@@ -62,6 +62,7 @@
     - { role: goplaxt, tags: ['goplaxt'] }
     - { role: gotify, tags: ['gotify'] }
     - { role: grafana, tags: ['grafana'] }
+    - { role: grocy, tags: ['grocy'] }
     - { role: guacamole, tags: ['guacamole'] }
     - { role: handbrake, tags: ['handbrake'] }
     - { role: healthchecks, tags: ['healthchecks'] }

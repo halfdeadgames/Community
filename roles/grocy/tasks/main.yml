@@ -1,8 +1,8 @@
 #########################################################################
-# Title:            Community: LazyLibrarian                            #
-# Author(s):        Superduper09                                        #
+# Title:            Community: Grocy                                  #
+# Author(s):        halfdeadgames                                       #
 # URL:              https://github.com/Cloudbox/Community               #
-# Docker Image(s):  thraxis/lazylibrarian-calibre                       #
+# Docker Image(s):  lscr.io/linuxserver/grocy:latest                            #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -13,51 +13,47 @@
   include_role:
     name: cloudflare-dns
   vars:
-    record: lazylibrarian
+    record: grocy
   when: cloudflare_enabled
 
 - name: Stop and remove any existing container
   docker_container:
-    name: lazylibrarian
+    name: grocy
     state: absent
 
-- name: Create lazylibrarian directories
+- name: Create grocy directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
-    - /opt/lazylibrarian
-    - /mnt/unionfs/Media/Books
-    - /mnt/unionfs/Media/Audiobooks
-    - /mnt/unionfs/Media/Magazines
-    - /mnt/unionfs/Media/Comics
+    - /opt/grocy
+
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/opt/grocy:/config"
 
 - name: Create and start container
   docker_container:
-    name: lazylibrarian
-    image: linuxserver/lazylibrarian
+    name: grocy
+    image: lscr.io/linuxserver/grocy:latest
     pull: yes
+    exposed_ports:
+      - "80"
     env:
-      TZ: "{{ tz }}"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      VIRTUAL_HOST: "lazylibrarian.{{ user.domain }}"
-      VIRTUAL_PORT: "5299"
-      LETSENCRYPT_HOST: "lazylibrarian.{{ user.domain }}"
+      UMASK: "002"
+      VIRTUAL_HOST: "grocy.{{ user.domain }}"
+      VIRTUAL_PORT: "80"
+      LETSENCRYPT_HOST: "grocy.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
-      DOCKER_MODS: "linuxserver/calibre-web:calibre|linuxserver/mods:lazylibrarian-ffmpeg"
-    volumes:
-      - "/opt/lazylibrarian:/config"
-      - "/mnt/unionfs/Media/Books:/books"
-      - "/mnt/unionfs/Media/Audiobooks:/audiobooks"
-      - "/mnt/unionfs/Media/Magazines:/magazines"
-      - "/mnt/unionfs/Media/Comics:/comics"
-      - "/mnt/local/downloads/:/downloads"
-      - "/mnt:/mnt"
+      TZ: "{{ tz }}"
+    volumes: "{{ default_volumes }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
-          - lazylibrarian
+          - grocy
     purge_networks: yes
     restart_policy: unless-stopped
     state: started
