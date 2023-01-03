@@ -1,8 +1,8 @@
 #########################################################################
-# Title:            Community: comixed                                  #
-# Author(s):        theotocopulitos                                     #
+# Title:            Community: Metube                                   #
+# Author(s):        halfdeadgames                                       #
 # URL:              https://github.com/Cloudbox/Community               #
-# Docker Image(s):  comixed/comixed                                     #
+# Docker Image(s):  alexta69/metube                                     #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -13,46 +13,50 @@
   include_role:
     name: cloudflare-dns
   vars:
-    record: comixed
+    record: metube
   when: cloudflare_enabled
 
 - name: Stop and remove any existing container
   docker_container:
-    name: comixed
+    name: metube
     state: absent
 
-- name: Create comixed directories
+- name: Create metube directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
-    - /opt/comixed
-    - /opt/comixed/root
-    - /opt/comixed/comic_data
-    - /mnt/local/Media/Comics
-    
+    - /opt/metube
+    - /mnt/local/downloads/metube
+
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/opt/metube:/config"
+      - "/mnt/local/downloads/metube:/downloads"
+
 - name: Create and start container
   docker_container:
-    name: comixed
-    image: comixed/comixed:latest
+    name: metube
+    image: alexta69/metube
     pull: yes
+    exposed_ports:
+      - "8081"
     env:
-      TZ: "{{ tz }}"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      VIRTUAL_HOST: "comixed.{{ user.domain }}"
-      VIRTUAL_PORT: "7171"
-      LETSENCRYPT_HOST: "comixed.{{ user.domain }}"
+      UMASK: "002"
+      VIRTUAL_HOST: "metube.{{ user.domain }}"
+      VIRTUAL_PORT: "8081"
+      LETSENCRYPT_HOST: "metube.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
-    volumes:
-      - "/opt/comixed/root:/root/.comixed"
-      - "/mnt/unionfs/Media/Comics:/library/incoming"
-      - "/mnt/unionfs/Media/Comics:/comic_data"
-      - "/mnt:/mnt"
+      TZ: "{{ tz }}"
+      STATE_DIR: "/config"
+    volumes: "{{ default_volumes }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
-          - comixed
+          - metube
     purge_networks: yes
     restart_policy: unless-stopped
     state: started

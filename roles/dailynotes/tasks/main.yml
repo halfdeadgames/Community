@@ -1,8 +1,8 @@
 #########################################################################
-# Title:            Community: comixed                                  #
-# Author(s):        theotocopulitos                                     #
+# Title:            Community: Daily Notes                              #
+# Author(s):        halfdeadgames                                       #
 # URL:              https://github.com/Cloudbox/Community               #
-# Docker Image(s):  comixed/comixed                                     #
+# Docker Image(s):  m0ngr31/dailynotes                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
@@ -13,46 +13,47 @@
   include_role:
     name: cloudflare-dns
   vars:
-    record: comixed
+    record: dailynotes
   when: cloudflare_enabled
 
 - name: Stop and remove any existing container
   docker_container:
-    name: comixed
+    name: dailynotes
     state: absent
 
-- name: Create comixed directories
+- name: Create dailynotes directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
-    - /opt/comixed
-    - /opt/comixed/root
-    - /opt/comixed/comic_data
-    - /mnt/local/Media/Comics
-    
+    - /opt/dailynotes
+
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/opt/dailynotes:/app/config"
+
 - name: Create and start container
   docker_container:
-    name: comixed
-    image: comixed/comixed:latest
+    name: dailynotes
+    image: m0ngr31/dailynotes
     pull: yes
+    exposed_ports:
+      - "5000"
     env:
-      TZ: "{{ tz }}"
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      VIRTUAL_HOST: "comixed.{{ user.domain }}"
-      VIRTUAL_PORT: "7171"
-      LETSENCRYPT_HOST: "comixed.{{ user.domain }}"
+      UMASK: "002"
+      VIRTUAL_HOST: "dailynotes.{{ user.domain }}"
+      VIRTUAL_PORT: "5000"
+      LETSENCRYPT_HOST: "dailynotes.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
-    volumes:
-      - "/opt/comixed/root:/root/.comixed"
-      - "/mnt/unionfs/Media/Comics:/library/incoming"
-      - "/mnt/unionfs/Media/Comics:/comic_data"
-      - "/mnt:/mnt"
+      TZ: "{{ tz }}"
+    volumes: "{{ default_volumes }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
-          - comixed
+          - dailynotes
     purge_networks: yes
     restart_policy: unless-stopped
     state: started
