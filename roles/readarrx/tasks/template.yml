@@ -32,7 +32,8 @@
       - "/opt/readarr{{ rolename }}:/config"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
-      - "/mnt/unionfs/Media/Books:/library"
+      - "/mnt/unionfs/Media/Books:/books"
+      - "/mnt/unionfs/Media/Audiobooks:/audiobooks"
 
 - name: Create and start container
   docker_container:
