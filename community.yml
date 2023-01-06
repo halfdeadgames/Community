@@ -48,6 +48,7 @@
     - { role: easycountdown, tags: [ 'easycountdown'] }
     - { role: embystat, tags: ['embystat'] }
     - { role: emby2, tags: ['emby2'] }
+    - { role: emulatorjs, tags: ['emulatorjs'] }
     - { role: epms, tags: ['epms'] }
     - { role: filebot, tags: ['filebot'] }
     - { role: filebrowser, tags: ['filebrowser'] }
@@ -133,6 +134,7 @@
     - { role: stash, tags: ['stash'] }
     - { role: subsonic, tags: ['subsonic'] }
     - { role: synclounge, tags: ['synclounge'] }
+    - { role: tandoor, tags: ['tandoor'] }
     - { role: tdarrv2, tags: ['tdarrv2'] }
     - { role: tdarrv2-node, tags: ['tdarrv2', 'tdarrv2-node'] }
     - { role: telegraf, tags: ['telegraf'] }
@@ -148,6 +150,7 @@
     - { role: vscode, tags: ['vscode'] }
     - { role: watchtower, tags: ['watchtower'] }
     - { role: wallabag, tags: ['wallabag'] }
+    - { role: webtop, tags: ['webtop'] }
     - { role: whisparr, tags: ['whisparr'] }
     - { role: wordpress, tags: ['wordpress'] }
     - { role: xbackbone, tags: ['xbackbone'] }

@@ -1,0 +1,91 @@
+#########################################################################
+# Title:            Community: Readarr                                  #
+# Author(s):        halfdeadgames                                       #
+# URL:              https://github.com/Cloudbox/Community               #
+# Docker Image(s):  housewrecker/gaps:latest                            #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare-dns
+  vars:
+    record: tandoor
+  when: cloudflare_enabled
+
+- name: Stop and remove any existing tandoordb container
+  docker_container:
+    name: tandoordb
+    state: absent
+
+- name: Stop and remove any existing tandoor container
+  docker_container:
+    name: tandoor
+    state: absent
+
+- name: Create tandoor directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - /opt/tandoor
+
+- name: Set default_volumes variable
+  set_fact:
+    default_volumes:
+      - "/opt/tandoor/staticfiles:/opt/recipes/staticfiles"
+      - "/opt/tandoor/mediafiles:/opt/recipes/mediafiles"
+
+- name: Create and start tandoordb container
+  docker_container:
+    name: tandoordb
+    image: postgres:11-alpine
+    pull: yes
+    env:
+      POSTGRES_USER: "{{ user.name }}"
+      POSTGRES_PASSWORD: "{{ user.pass }}"
+      POSTGRES_DB: "postgres"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - tandoordb
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
+
+- name: Create and start tandoor container
+  docker_container:
+    name: tandoor
+    image: vabene1111/recipes:beta
+    pull: yes
+    exposed_ports:
+      - "8080"
+    env:
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      UMASK: "002"
+      SECRET_KEY: "{{ user.pass }}"
+      DB_ENGINE: "django.db.backends.postgresql"
+      POSTGRES_HOST: "tandoordb"
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: "{{ user.name }}"
+      POSTGRES_PASSWORD: "{{ user.pass }}"
+      POSTGRES_DB: "postgres"
+      VIRTUAL_HOST: "tandoor.{{ user.domain }}"
+      VIRTUAL_PORT: "8080"
+      LETSENCRYPT_HOST: "tandoor.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+      TZ: "{{ tz }}"
+    volumes: "{{ default_volumes }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - tandoor
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
