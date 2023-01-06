@@ -1,64 +1,69 @@
 #########################################################################
-# Title:            Community: ReadarrX | Template                      #
-# Author(s):        salty                                               #
+# Title:            Community: Readarr                                  #
+# Author(s):        halfdeadgames                                       #
 # URL:              https://github.com/Cloudbox/Community               #
-# Docker Image(s):  cr.hotio.dev/hotio/readarr                                       #
+# Docker Image(s):  lscr.io/linuxserver/webtop                          #
 # --                                                                    #
 #         Part of the Cloudbox project: https://cloudbox.works          #
 #########################################################################
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
-- name: "Install named readarr role"
-  debug:
-    msg: "Installing {{ rolename }}"
-
-- name: "Set DNS Record on CloudFlare"
+- name: "Setting CloudFlare DNS Record"
   include_role:
     name: cloudflare-dns
   vars:
-    record: "readarr{{ rolename }}"
+    record: webtop
   when: cloudflare_enabled
 
-- name: Create readarrx directories
+- name: Stop and remove any existing container
+  docker_container:
+    name: webtop
+    state: absent
+
+- name: Create webtop directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
-    - "/opt/readarr{{ rolename }}"
-    - /mnt/local/Media/Books
+    - /opt/webtop
 
 - name: Set default_volumes variable
   set_fact:
     default_volumes:
-      - "/opt/readarr{{ rolename }}:/config"
-      - "/opt/scripts:/scripts"
-      - "/mnt:/mnt"
-      - "/mnt/unionfs/Media/Books:/books"
-      - "/mnt/unionfs/Media/Audiobooks:/audiobooks"
+      - "/opt/webtop:/config"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/:/host"
+
 
 - name: Create and start container
   docker_container:
-    name: "readarr{{ rolename }}"
-    image: cr.hotio.dev/hotio/readarr:nightly
+    name: webtop
+    image: lscr.io/linuxserver/webtop:ubuntu-mate
     pull: yes
     exposed_ports:
-      - "8787"
+      - "3000"
+    security_opts:
+      - seccomp:unconfined
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       UMASK: "002"
-      VIRTUAL_HOST: "readarr{{ rolename }}.{{ user.domain }}"
-      VIRTUAL_PORT: "8787"
-      LETSENCRYPT_HOST: "readarr{{ rolename }}.{{ user.domain }}"
+      VIRTUAL_HOST: "webtop.{{ user.domain }}"
+      VIRTUAL_PORT: "3000"
+      LETSENCRYPT_HOST: "webtop.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      KEYBOARD: "en-us-qwerty"
+      TITLE: "Webtop"
       TZ: "{{ tz }}"
-    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
+    volumes: "{{ default_volumes }}"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
-      "com.github.cloudbox.community": "readarrx"
+      "com.centurylinklabs.watchtower.enable": "false"
     networks:
       - name: cloudbox
         aliases:
-          - "readarr{{ rolename }}"
+          - webtop
+    privileged: yes
+    shm_size: "1GB"
     purge_networks: yes
     restart_policy: unless-stopped
     state: started
